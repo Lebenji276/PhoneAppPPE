@@ -13,7 +13,7 @@ namespace PhoneAppPPE
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private Dictionary<string, Dictionary<string, Visiteur>> DicoFinal = new Dictionary<string, Dictionary<string, Visiteur>>();
+        private Dictionary<string, Dictionary<string, Praticien>> DicoFinal = new Dictionary<string, Dictionary<string, Praticien>>();
 
         private ExpandableListViewAdapter mAdapter;
         private ExpandableListView expandableListView;
@@ -33,16 +33,12 @@ namespace PhoneAppPPE
             SetData(out mAdapter);
             expandableListView.SetAdapter(mAdapter);
 
-            expandableListView.ChildClick += ( s, e ) =>
-            {
-                Toast.MakeText(this, "Clicked : " + mAdapter.GetChild(e.GroupPosition, e.ChildPosition), ToastLength.Short).Show();
-            };
         }
 
         private void SetData( out ExpandableListViewAdapter mAdapter )
         {
             mAdapter = null;
-            HttpWebRequest webRequest = WebRequest.Create("https://bridge.buddyweb.fr/api/visiteurgsbfrais/visiteur") as HttpWebRequest;
+            HttpWebRequest webRequest = WebRequest.Create("https://bridge.buddyweb.fr/api/praticien/praticien") as HttpWebRequest;
             List<string> ListCP = new List<string>();
             if (webRequest == null)
             {
@@ -56,8 +52,8 @@ namespace PhoneAppPPE
                 using (StreamReader sr = new StreamReader(s))
                 {
                     string contributorsAsJson = sr.ReadToEnd();
-                    List<Visiteur> contributors = JsonConvert.DeserializeObject<List<Visiteur>>(contributorsAsJson);
-                    foreach (Visiteur visiteur in contributors)
+                    List<Praticien> contributors = JsonConvert.DeserializeObject<List<Praticien>>(contributorsAsJson);
+                    foreach (Praticien visiteur in contributors)
                     {
                         if (!ListCP.Contains(visiteur.MinCP))
                         {
@@ -68,7 +64,7 @@ namespace PhoneAppPPE
 
                     foreach (string item in ListCP)
                     {
-                        Dictionary<string, Visiteur> dictionaryaa = contributors.Where(x => x.MinCP == item).ToDictionary(x => x.IDAPI);
+                        Dictionary<string, Praticien> dictionaryaa = contributors.Where(x => x.MinCP == item).ToDictionary(x => x.pra_num);
                         DicoFinal.Add(item, dictionaryaa);
                     }
 
@@ -91,7 +87,7 @@ namespace PhoneAppPPE
         {
             int index = group.IndexOf(dep);
             List<string> groupB = new List<string>();
-            foreach (KeyValuePair<string, Visiteur> item in DicoFinal[group[index]])
+            foreach (KeyValuePair<string, Praticien> item in DicoFinal[group[index]])
             {
                 groupB.Add(item.Value.ToString());
             }

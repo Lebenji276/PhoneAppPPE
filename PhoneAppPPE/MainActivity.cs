@@ -23,18 +23,15 @@ namespace PhoneAppPPE
         {
             base.OnCreate(bundle);
 
-
-            ProgressDialog dialog2 = ProgressDialog.Show(this, "Down Loading", "Please wait ...");
-
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             expandableListView = FindViewById<ExpandableListView>(Resource.Id.expandableListView);
+            expandableListView.SetAdapter(mAdapter);
 
             //Set Data
             try
             {
                 SetData(out mAdapter);
-                dialog2.Dismiss();
             }
             catch (System.Exception)
             {
@@ -51,7 +48,6 @@ namespace PhoneAppPPE
                 });
                 Dialog dialog = alert.Create();
                 dialog.Show();
-                dialog2.Dismiss();
             }
             expandableListView.SetAdapter(mAdapter);
 

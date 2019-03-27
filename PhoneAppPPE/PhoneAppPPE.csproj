@@ -56,6 +56,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Departement.cs" />
     <Compile Include="ExpandableListViewAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Praticien.cs" />

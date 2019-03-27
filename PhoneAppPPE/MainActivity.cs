@@ -24,13 +24,35 @@ namespace PhoneAppPPE
             base.OnCreate(bundle);
 
 
+            ProgressDialog dialog2 = ProgressDialog.Show(this, "Down Loading", "Please wait ...");
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             expandableListView = FindViewById<ExpandableListView>(Resource.Id.expandableListView);
 
             //Set Data
-            SetData(out mAdapter);
+            try
+            {
+                SetData(out mAdapter);
+                dialog2.Dismiss();
+            }
+            catch (System.Exception)
+            {
+                Android.App.AlertDialog.Builder alert = new Android.App.AlertDialog.Builder(this);
+                alert.SetTitle("Message d'erreur");
+                alert.SetMessage("Vérifiez votre connexion internet");
+                alert.SetPositiveButton("Quitter", ( senderAlert, args ) =>
+                {
+                    Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
+                });
+                alert.SetNegativeButton("OK", ( senderAlert, args ) =>
+                {
+                    Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
+                });
+                Dialog dialog = alert.Create();
+                dialog.Show();
+                dialog2.Dismiss();
+            }
             expandableListView.SetAdapter(mAdapter);
 
         }

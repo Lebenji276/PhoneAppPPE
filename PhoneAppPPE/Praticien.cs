@@ -34,6 +34,6 @@ namespace PhoneAppPPE
             }
             set => _MinCP = value;
         }
-        public override string ToString() => $"{pra_nom.ToUpper()} {pra_prenom}\n{pra_adresse}\n{pra_cp}\t{pra_ville}\n Coefficient notoriété : {pra_coefnotoriete}\nLieu : {typ_lieu}\n Libelle : {typ_libelle}";
+        public override string ToString() => $"{pra_nom.ToUpper()} {pra_prenom}\n{pra_adresse}\n{pra_cp}\t{pra_ville}\nCoefficient notoriété : {pra_coefnotoriete}\nLieu : {typ_lieu}\nLibelle : {typ_libelle}";
     }
 }

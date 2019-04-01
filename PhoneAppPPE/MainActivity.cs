@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -10,7 +11,7 @@ using System.Net;
 
 namespace PhoneAppPPE
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity
     {
         private Dictionary<string, Dictionary<string, Praticien>> DicoFinal = new Dictionary<string, Dictionary<string, Praticien>>();
@@ -30,10 +31,10 @@ namespace PhoneAppPPE
             expandableListView = FindViewById<ExpandableListView>(Resource.Id.expandableListView);
             expandableListView.SetAdapter(mAdapter);
 
-            SetData(out mAdapter);
             //Set Data
             try
             {
+                SetData(out mAdapter);
             }
             catch (System.Exception)
             {
@@ -58,38 +59,88 @@ namespace PhoneAppPPE
         private void SetData( out ExpandableListViewAdapter mAdapter )
         {
             mAdapter = null;
-            HttpWebRequest webRequest = WebRequest.Create("https://bridge.buddyweb.fr/api/praticien/praticien") as HttpWebRequest;
             List<string> ListCP = new List<string>();
-            if (webRequest == null)
+            try
             {
-                return;
-            }
-            webRequest.ContentType = "application/json";
-            webRequest.UserAgent = "Nothing";
-
-            using (Stream s = webRequest.GetResponse().GetResponseStream())
-            {
-                using (StreamReader sr = new StreamReader(s))
+                HttpWebRequest webRequest = WebRequest.Create("http://192.168.43.172:8888/public/praticiens") as HttpWebRequest;
+                
+                if (webRequest == null)
                 {
-                    string contributorsAsJson = sr.ReadToEnd();
-                    List<Praticien> contributors = JsonConvert.DeserializeObject<List<Praticien>>(contributorsAsJson);
-                    foreach (Praticien visiteur in contributors)
+                    return;
+                }
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Nothing";
+
+                using (Stream s = webRequest.GetResponse().GetResponseStream())
+                {
+                    using (StreamReader sr = new StreamReader(s))
                     {
-                        if (!ListCP.Contains(visiteur.MinCP))
+                        string contributorsAsJson = sr.ReadToEnd();
+                        List<Praticien> contributors = JsonConvert.DeserializeObject<List<Praticien>>(contributorsAsJson);
+                        foreach (Praticien visiteur in contributors)
                         {
-                            ListCP.Add(visiteur.MinCP);
-                            ListCP.Sort();
+                            if (!ListCP.Contains(visiteur.MinCP))
+                            {
+                                ListCP.Add(visiteur.MinCP);
+                                ListCP.Sort();
+                            }
                         }
-                    }
 
-                    foreach (string item in ListCP)
-                    {
-                        Dictionary<string, Praticien> dictionaryaa = contributors.Where(x => x.MinCP == item).ToDictionary(x => x.pra_num);
-                        DicoFinal.Add(item, dictionaryaa);
-                    }
+                        foreach (string item in ListCP)
+                        {
+                            Dictionary<string, Praticien> dictionaryaa = contributors.Where(x => x.MinCP == item).ToDictionary(x => x.pra_num);
+                            DicoFinal.Add(item, dictionaryaa);
+                        }
 
+                    }
                 }
             }
+            catch (System.Exception)
+            {
+                HttpWebRequest webRequest = WebRequest.Create("https://bridge.buddyweb.fr/api/praticien/praticien") as HttpWebRequest;
+
+                Android.App.AlertDialog.Builder alert = new Android.App.AlertDialog.Builder(this);
+                alert.SetTitle("Avertissement");
+                alert.SetMessage("Dernière MAJ : 28/03/2019 à 16h45");
+                alert.SetNegativeButton("OK", ( senderAlert, args ) =>
+                {
+                    
+                });
+                Dialog dialog = alert.Create();
+                dialog.Show();
+                if (webRequest == null)
+                {
+                    return;
+                }
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Nothing";
+
+                using (Stream s = webRequest.GetResponse().GetResponseStream())
+                {
+                    using (StreamReader sr = new StreamReader(s))
+                    {
+                        string contributorsAsJson = sr.ReadToEnd();
+                        List<Praticien> contributors = JsonConvert.DeserializeObject<List<Praticien>>(contributorsAsJson);
+                        foreach (Praticien visiteur in contributors)
+                        {
+                            if (!ListCP.Contains(visiteur.MinCP))
+                            {
+                                ListCP.Add(visiteur.MinCP);
+                                ListCP.Sort();
+                            }
+                        }
+
+                        foreach (string item in ListCP)
+                        {
+                            Dictionary<string, Praticien> dictionaryaa = contributors.Where(x => x.MinCP == item).ToDictionary(x => x.pra_num);
+                            DicoFinal.Add(item, dictionaryaa);
+                        }
+
+                    }
+                }
+            }
+
+
 
             HttpWebRequest webRequest2 = WebRequest.Create("https://geo.api.gouv.fr/departements") as HttpWebRequest;
             if (webRequest2 == null)
@@ -118,7 +169,7 @@ namespace PhoneAppPPE
                 group.Add(item);
 
                 string nomDepartement = Departement[item];
-                groupAff.Add("Département : " + nomDepartement + "(" + item + ")");
+                groupAff.Add(nomDepartement + "(" + item + ")");
 
             }
 

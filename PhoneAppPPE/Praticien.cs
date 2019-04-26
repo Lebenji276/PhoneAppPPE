@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
-namespace PhoneAppPPE
+﻿namespace PhoneAppPPE
 {
-    class Praticien
+    internal class Praticien
     {
         private string _MinCP;
         public string pra_num { get; set; }
@@ -34,6 +22,6 @@ namespace PhoneAppPPE
             }
             set => _MinCP = value;
         }
-        public override string ToString() => $"{pra_nom.ToUpper()} {pra_prenom}\n{pra_adresse}\n{pra_cp}\t{pra_ville}\n Coefficient notoriété : {pra_coefnotoriete}\nLieu : {typ_lieu}\n Libelle : {typ_libelle}";
+        public override string ToString() => $"{pra_nom.ToUpper()} {pra_prenom}\n{pra_adresse}\n{pra_cp}\t{pra_ville}\nCoefficient notoriété : {pra_coefnotoriete}\nLieu : {typ_lieu}\nLibelle : {typ_libelle}";
     }
 }

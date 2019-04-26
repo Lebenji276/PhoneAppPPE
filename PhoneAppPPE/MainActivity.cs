@@ -63,7 +63,7 @@ namespace PhoneAppPPE
             try
             {
                 HttpWebRequest webRequest = WebRequest.Create("http://192.168.43.172:8888/public/praticiens") as HttpWebRequest;
-                
+
                 if (webRequest == null)
                 {
                     return;
@@ -104,7 +104,7 @@ namespace PhoneAppPPE
                 alert.SetMessage("Dernière MAJ : 28/03/2019 à 16h45");
                 alert.SetNegativeButton("OK", ( senderAlert, args ) =>
                 {
-                    
+
                 });
                 Dialog dialog = alert.Create();
                 dialog.Show();

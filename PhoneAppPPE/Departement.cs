@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
-namespace PhoneAppPPE
+﻿namespace PhoneAppPPE
 {
-    class Departement
+    internal class Departement
     {
         public string nom { get; set; }
         public string code { get; set; }
